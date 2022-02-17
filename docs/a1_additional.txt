@@ -1,0 +1,7 @@
+The assignment requires you to write the routines to calculate the vertices, normals, and indices. You cannot
+use a library to do thees operations other than the built-in Javascript Math object.
+The assignment is to written using Javascript and WebGL. Other libraries and languages are not part of this
+assignment.
+If you complete the  vertex normals (the averaged normals) then hand in your assignment using them. If you
+don't complete the averaged/vertex normals then submit the assignment using the surface normals (the same
+normal on all three vertices for a triangle).

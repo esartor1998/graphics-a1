@@ -1,0 +1,156 @@
+Assignment 1 - Transformations and Introduction to OpenGL
+Due. Friday February 4, 2022
+
+
+Build the geometry for a surface using an image to generate a height-map. 
+The height-map takes the values in an image and uses them to calculate the (x,y,z) coordinates for each
+vertex. 
+
+
+Height Maps
+The surface geometry you create will be a three dimensional model where the height is taken from an image in a
+file. The image is read into a two dimensional array. The y values for the polygons that make the surface come
+from the values stored in the array. The x and z values for the polygons come from the two indices of the
+array.  
+
+You will need to create an array of triangles using the array indices and the values stored in the array. Use
+adjacent array elements to calculate the three vertices in a triangle. For example, array indices [0][0],
+[0][1], and [1][1] would be used to calculate the x and z values of the triangle. The y value for each would be
+taken from the array at those indices. The first vertex would therefor be (0, a[0][0], 0), the second vertex
+(0, a[0][1], 2), and the third (1, a[1][1], 1). All of these values will need to be scaled to the correct size
+so they fit in the viewing space.
+
+Scale the height-map so the width and depth of the complete geometry always 1.0 unit long, this guarantees it
+will fit in the window using the sample code. All vertices should have values between 0.0 and 1.0. 
+
+Scale the height or the surface will be too rough. I scaled the y values by 0.3.
+
+Scale the x and z values by dividing the maximum vertex value 1.0 by the number of indices in x and z. Use the
+same scaling value in both dimensions. If the image is not square then the surface created from it will not be
+square.
+
+Your code should work with any size image file. The larger the image file is the more polygons it will create.
+There are size limits for a single mesh that can be drawn in WebGL but the sample pgm files are small enough to
+not run into this problem. You don't need to change the WebGL code to work with meshes that are larger than 64K
+vertices.
+
+There are several arrays used to build the geometry. These are all defined at the top of the loaddata.js file.
+You need to write the code in the initGeometry() function which puts the data into arrays so that it can be
+drawn.
+
+The vertices array contains all of the x,y,z vertex information. It is one dimensional array with the x,y,z
+values for each vertex listed in a sequence.
+
+The normals array contains the normals for each vertex. It has the same format as the vertices array. It should
+contain the same number of entries as the vertices array. The values in this array should align with the
+vertices array. So the first three values in vertices are the (x,y,z) values for the first vertex. The first
+three values in the normals array are the values that describe the normal for the first vertex.
+
+The indices array contains a list of which vertices are combined to create a triangle. Each value in this array
+refers to a vertex (three values) in the vertices array.
+
+The textureCoords array contain the locations where the texture is mapped onto the object. In this program
+there is only one colour used in the texture so the array should contain the same values for each vertex. For
+each set of vertices that make a triangle the textureCoords would be (0,0), (1,0), (1,1). 
+
+Normals will need to be calculated in two ways. First surface normals should be calculated. This will be one
+normal that is calculated using the three vertices for the triangle. In this case, each vertex will use the
+same normal value.
+
+The second set of normals that you should calculate are the average normals for vertex. In this case, take all
+of the normals attached to one vertex, average them, and use the resultant normal for that vertex.
+
+
+PGM Files
+The PGM files are grayscale (monochrome) images. Each pixel has one colour value associated with it.  If a
+pixel in the image is black is has a value of 0. This means the vertex will be moved 0 (not at all).  If the
+pixel is white it will have a value of 255 and this will move the vertex the farthest.  Gray values that appear
+between 0 and 255 will move the vertex proportionally to the size of the value.
+
+Read the height map from a pgm file and store it in a two dimensional array.
+
+The pgm files have the format:
+
+P2
+# comment
+width height
+depth
+pixel-value
+pixel-value
+pixel-value
+pixel-value
+...
+
+There will be (width * height) pixel-values in the file. The sample files we are using have this format. Each
+pixel-value is on separate lines. If you try other pgm files then you should verify if it has multiple
+pixel-values on one line. The program will be tested with file that have the pixel-values on separate lines. 
+
+The P2 is a header which indicates a gray scale ASCII file.
+The height and width are the dimensions of the image. The depth is the
+maximum value of any of the numbers.  The numbers are the image information.
+In the normal file format, ay type and amount of whitespace can appear between any of the fields in the file.
+Comments can appear on any line starting with a #. There will only be one comment in the sample files, on the
+second line.
+
+Three sample input files are provided on the Courselink page.
+
+Sample Code
+The starting code for the assignment is on Courselink. You should only need to edit the loaddata.js file.
+
+The program needs to be restarted before the image file is loaded.
+
+
+Development Notes:
+Start with a small example so you can see what is happening in your code.
+
+A lot has to be done to make the surface display properly.  Try small examples, calculate values by had to test
+that they are correct.
+
+The number and values for the vertices, indices, normals, and texture coordinates can be confusing. You can
+calculate a small example of one or two polygons by hand and load them into the geometry arrays to make sure
+that your calculations are correct.
+
+Find the reload command for your browser. This will let you reload the script without the need to click on the
+file name in the file browser. For Chrome on OSX is it command-r. If this doesn't work then you can force the
+browser to reload using shift-command-r. Different operating systems will use different reload commands. 
+
+If the http server does not appear to be responding you may need to restart it. This seems to happen very
+infrequently.
+
+When viewing numbers in the console, remember that they can be written using exponential notation. If you can't
+see the end of a long number then it may have an exponent attached to it.
+
+Comparison of types in Javascript can sometimes be tricky. Make sure you aren't comparing strings or characters
+when you want to compare numbers. This is especially true with inequalities (a<b). 
+
+If you print a large table in a loop then the system will slow down. It may look like it has stopped working.
+
+Check if you dividing by zero when calculating normals.
+
+When the program stops and displays nothing then it is probably a syntax error or invalid parameter. Look at
+the developer's console in the browser for errors and warnings.
+
+
+Handin Notes
+Don't change the names of the files. You can add more files if you wish.
+
+Before you submit your code, do the following:
+-include a readme.txt with you student number and your name
+-check that all of the files needed to run the program have been included (including the texture files)
+-include the image files in a directory labelled textures
+
+
+Submit the assignment using the dropbox for assignment 1 in Courselink.
+
+Include a readme.txt which contains your student number, and a short description of any parts of the program
+which do not function correctly. For instance, if your program doesn't always draw the image correctly then
+explain when it doesn't work.
+
+
+Your code will be tested using the Chrome browser. If it doesn't work with Chrome but it does work on another
+browser then you will lose marks. 
+
+The assignment will be compiled following these steps by:
+-unpacking your submission (tar or zip)
+-running the python http.server module
+-starting index.html in the browser using localhost:8000
